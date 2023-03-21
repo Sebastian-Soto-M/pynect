@@ -12,7 +12,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Sebastian-Soto-M/pynect",
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(exclude=["tests.*", "tests"]),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
@@ -23,5 +23,6 @@ setuptools.setup(
         "numpy>=1.20.0",
         "pandas>=1.2.0",
         "requests>=2.25.0"
-    ]
+    ],
+    zip_safe=False,
 )
