@@ -14,4 +14,8 @@ test-utils:
 
 report:
 	@test
-	$(COVERAGE).utils
+	coverage report --skip-covered --sort Miss
+
+html-report:
+	@report
+	coverage html --skip-empty --title "Pynect Tests"

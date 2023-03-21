@@ -16,7 +16,7 @@ class RestAPIQuery:
     def endpoint(self):
         return self.base_url
 
-    def __call__(self, path_params: Optional[str] = None, **kwargs) -> Any:
+    def __call__(self, path_params: Optional[str] = None, **kwargs) -> str:
         if kwargs:
             return (f'{self.endpoint}/{path_params}?'
                     if path_params else f'{self.endpoint}?') + '&'.join([

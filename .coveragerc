@@ -1,0 +1,22 @@
+[run]
+omit =
+    shared/utils/file_management.py
+    shared/_init_.py
+    tests/*
+    
+[report]
+exclude_lines =
+    -> Response: ...
+    if _name_ == "_main_":
+    if _name_ == '_main_':
+    raise NotImplementedError
+    def run_suite
+    def get_suite
+    def _repr_
+    pragma: no cover
+    def setUpClass
+    def setUp
+    def tearDown
+
+
+skip_empty = True

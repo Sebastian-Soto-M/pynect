@@ -11,5 +11,5 @@ def get_suite(*tests: Iterable[Type[TestCase]]) -> TestSuite:
     return TestSuite(suites)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     TextTestRunner().run(get_suite([TestQueryHelpers]))
