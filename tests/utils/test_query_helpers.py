@@ -2,7 +2,7 @@ import logging
 import time
 from unittest import TestCase
 
-from pynect.constants import STDOUT_LOG_FORMAT
+from pynect.logging.constants import STDOUT_LOG_FORMAT
 from pynect.utils.query_helpers import RestAPIQuery
 
 

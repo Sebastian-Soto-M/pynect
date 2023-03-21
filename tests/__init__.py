@@ -5,17 +5,16 @@ from sys import stdout
 from typing import Type
 from unittest import TestCase, TestLoader, TestSuite, TextTestRunner
 
-import pynect.constants as pc
+import pynect.logging.constants as pc
 
 
 def _build_suite(
     loader: TestLoader, *test_classes: Iterable[Type[TestCase]]
 ) -> TestSuite:
-    suites_list = []
-    for test_class in chain(*test_classes):
-        suite = loader.loadTestsFromTestCase(test_class)
-        suites_list.append(suite)
-    return TestSuite(suites_list)
+    test_suite = TestSuite()
+    test_suite.addTests(
+        map(loader.loadTestsFromTestCase, chain(*test_classes)))
+    return test_suite
 
 
 def run(*test_classes) -> TestSuite:

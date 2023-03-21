@@ -10,7 +10,7 @@ test:
 	$(COVERAGE)
 
 test-utils:
-	coverage run -m --branch
+	$(COVERAGE).utils
 
 report:
 	@test

@@ -7,7 +7,7 @@ from pynect.api.authentication import (AuthenticationEnum,
                                        AuthenticationFactory,
                                        BasicAuthentication,
                                        BearerAuthentication)
-from pynect.constants import STDOUT_LOG_FORMAT
+from pynect.logging.constants import STDOUT_LOG_FORMAT
 
 
 class TestAuthentication(TestCase):

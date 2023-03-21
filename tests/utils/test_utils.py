@@ -6,7 +6,7 @@ from unittest import TestCase
 from pynect.utils import (calc_iterations, is_date_older_than_delta,
                           split_list)
 
-from pynect.constants import STDOUT_LOG_FORMAT
+from pynect.logging.constants import STDOUT_LOG_FORMAT
 
 
 class TestUtils(TestCase):
