@@ -10,9 +10,9 @@ from pandas import DataFrame
 from pydantic import BaseModel
 from pyodbc import Connection as dbconnection
 from pyodbc import Cursor
-from shared.api.connector.cli import ConnectorOptions
-from shared.api.connector.models import Connector, ConnectorManager
-from shared.utils import map_dataframe_columns, utils
+from pynect.api.connector.cli import ConnectorOptions
+from pynect.api.connector.models import Connector, ConnectorManager
+from pynect.utils import map_dataframe_columns, utils
 
 
 class DBEnum(str, Enum):

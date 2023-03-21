@@ -1,15 +1,7 @@
-from collections.abc import Iterable
-from typing import Type
-from unittest import TestCase, TestSuite, TextTestRunner, TestLoader
-from itertools import chain
-from .test_query_helpers import TestQueryHelpers
-
-
-def get_suite(*tests: Iterable[Type[TestCase]]) -> TestSuite:
-    suites = [TestLoader().loadTestsFromTestCase(test)
-              for test in chain(*tests)]
-    return TestSuite(suites)
+from tests import run
+from tests.utils import TESTS as UTILS_TESTS
+from tests.api import TESTS as API_TESTS
 
 
 if __name__ == "__main__":  # pragma: no cover
-    TextTestRunner().run(get_suite([TestQueryHelpers]))
+    run(UTILS_TESTS, API_TESTS)
