@@ -1,21 +1,18 @@
-import logging
 import time
 from unittest import TestCase
 
-from pynect.logging.constants import STDOUT_LOG_FORMAT
+from tests import configure_logger
 
 
 class TestCLI(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.logger = logging.getLogger(cls.__name__)
+        cls.logger = configure_logger(cls.__name__)
 
     def setUp(self):
-        self.startTime = time.time()
+        self.start_time = time.time()
 
     def tearDown(self):
-        t = time.time() - self.startTime
-        info = STDOUT_LOG_FORMAT % (TestCLI.__name__,
-                                    self.id().split('.')[-1], t)
-        self.logger.info(info)
+        t: float = time.perf_counter() - self.start_time
+        self.logger.info("{:.3f}ms".format(t*1000))

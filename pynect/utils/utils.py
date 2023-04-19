@@ -1,27 +1,46 @@
-import numpy as np
 import functools
-import time
-
 import logging
 import math
+import os
 import re
+import time
 from datetime import datetime, timedelta
-from os.path import join
-from typing import Dict, Generator
+from typing import Dict, Generator, Optional
 
+import colorlog
+import numpy as np
 import pandas as pd
 
 from .file_management import create_logs_folder
 
-FORMAT = '%-20s\t=>\t%-50s[%.4f]'
+LOG_PREFIX = "%(log_color)s%(levelname)-8s%(yellow)s%(module)s[%(funcName)s]%(reset)s\t"
 
 
-def configure_logger(project_name: str, logging_mode: int) -> None:  # pragma: no cover
-    """ Configures the logging format: time:levelname[module]name:message"""
-    name = join(create_logs_folder(project_name),
-                f'{datetime.now().strftime("%Y-%m-%d")}.log')
-    logging.basicConfig(filename=name, encoding='utf-8', level=logging_mode,
-                        format='%(asctime)s:%(levelname)s[%(module)s|%(funcName)s]%(name)s:\t%(message)s')
+def configure_logger(
+        logger_name: str,
+        log_level: int = logging.INFO,
+        filename: Optional[str] = None,
+        project_name: str = 'pynect',
+) -> logging.Logger:
+    handler = (logging.FileHandler(
+        os.path.join(create_logs_folder(project_name), filename)
+    ) if filename else logging.StreamHandler())
+    handler.setFormatter(
+        colorlog.ColoredFormatter(
+            LOG_PREFIX+"%(reset)s%(blue)s%(message)s",
+            log_colors={
+                'DEBUG': 'cyan',
+                'INFO': 'green',
+                'WARNING': 'yellow',
+                'ERROR': 'red',
+                'CRITICAL': 'red,bg_black',
+            }
+        )
+    )
+    logger = logging.getLogger(logger_name)
+    logger.addHandler(handler)
+    logger.setLevel(log_level)
+    return logger
 
 
 def is_date_older_than_delta(date: datetime, delta: timedelta) -> bool:
@@ -56,7 +75,9 @@ def camel_to_snake(name) -> str:
     return pattern3.sub(r'\1_\2', name).lower()
 
 
-def map_dataframe_columns(df: pd.DataFrame,  mappings: Dict[str, str]) -> pd.DataFrame:
+def map_dataframe_columns(
+    df: pd.DataFrame,  mappings: Dict[str, str]
+) -> pd.DataFrame:
     return df.rename(columns=mappings)
 
 
@@ -98,9 +119,10 @@ def output_format_date(dt: datetime) -> str:
     return dt.strftime("%m/%d/%Y")
 
 
-def add_lists(*lists):
+def add_lists(*lists: list):
     """
-    This function adds an arbitrary number of lists element-wise, padding the shorter lists with zeros if necessary.
+    This function adds an arbitrary number of lists element-wise, padding the
+    shorter lists with zeros if necessary.
 
     Parameters:
     *lists (List[int]): The lists to add.
@@ -113,8 +135,8 @@ def add_lists(*lists):
     [4, 4, 6, 5]
     """
     if len(lists) != 0:
-        length = max(len(l) for l in lists)
-        padded_lists = [l + [0] * (length - len(l)) for l in lists]
+        length = max(len(lst) for lst in lists)
+        padded_lists = [lst + [0] * (length - len(lst)) for lst in lists]
         result = np.sum(padded_lists, axis=0).tolist()
         return result
     return list()

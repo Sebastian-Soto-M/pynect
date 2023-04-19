@@ -1,30 +1,22 @@
+from __future__ import annotations
+
 import logging
 import time
 from unittest import TestCase
 
 import responses
+
 from pynect.api.authentication import (AuthenticationEnum,
                                        AuthenticationFactory,
                                        BasicAuthentication,
                                        BearerAuthentication)
-from pynect.logging.constants import STDOUT_LOG_FORMAT
+from pynect.utils import configure_logger, timeit
 
 
 class TestAuthentication(TestCase):
+    logger: logging.Logger = configure_logger('TestAuthentication')
 
-    @classmethod
-    def setUpClass(cls):
-        cls.logger = logging.getLogger(cls.__name__)
-
-    def setUp(self):
-        self.startTime = time.time()
-
-    def tearDown(self):
-        t = time.time() - self.startTime
-        info = STDOUT_LOG_FORMAT %\
-            (TestAuthentication.__name__, self.id().split('.')[-1], t)
-        self.logger.info(info)
-
+    @timeit(logger)
     def test_authentication_factory_basic(self):
         # build object from factory
         auth = AuthenticationFactory.get(

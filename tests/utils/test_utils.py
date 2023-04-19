@@ -1,12 +1,9 @@
-import logging
 import time
 from datetime import datetime, timedelta
 from unittest import TestCase
 
-from pynect.utils import (calc_iterations, is_date_older_than_delta,
-                          split_list)
-
-from pynect.logging.constants import STDOUT_LOG_FORMAT
+from pynect.utils import calc_iterations, is_date_older_than_delta, split_list
+from tests import configure_logger
 
 
 class TestUtils(TestCase):
@@ -14,18 +11,16 @@ class TestUtils(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.logger = logging.getLogger(cls.__name__)
+        cls.logger = configure_logger(cls.__name__)
 
     def setUp(self):
         t = time.time()
-        self.startTime = t
+        self.start_time = t
         self.date = datetime.fromtimestamp(t)
 
     def tearDown(self):
-        t = time.time() - self.startTime
-        info = STDOUT_LOG_FORMAT % (TestUtils.__name__,
-                                    self.id().split('.')[-1], t)
-        self.logger.info(info)
+        t: float = time.perf_counter() - self.start_time
+        self.logger.debug("{:.3f}ms".format(t*1000))
 
     def test_is_date_older_than_delta_true(self):
         time.sleep(0.02)

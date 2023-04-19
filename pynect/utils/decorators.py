@@ -1,31 +1,30 @@
 import logging
 import time
 from functools import wraps
+from typing import Optional
+
+from .utils import configure_logger
 
 
-def timed(log=True):
-    """Decorator that times the function it belongs to. You can set
-    log to False if you want to print to standard output
-
-    Args:
-        log (bool, optional)
-    """
-    def timed_decorator(func):
+def timeit(
+    logger: Optional[logging.Logger] = None,
+    level: int = logging.DEBUG,  # Default to DEBUG level
+):
+    def decorator(func):
+        if (lgr := logger) is None:
+            lgr = configure_logger(func.__module__)
         func_name = func.__name__
-        logger = logging.getLogger(func_name).debug if log else print
-
-        def _format_output(msg: str) -> str:
-            divider = '-'*len(msg)
-            return f'{divider}\n{msg}\n{divider}\n'
 
         @wraps(func)
-        def wrapper_timer(*args, **kwargs):
-            tic = time.perf_counter()
-            logger(_format_output(f'Running: {func_name}'))
-            value = func(*args, **kwargs)
-            toc = time.perf_counter()
-            elapsed_time = toc - tic
-            logger(_format_output(f"Done: {elapsed_time:0.4f} seconds"))
-            return elapsed_time, value
-        return wrapper_timer
-    return timed_decorator
+        def wrapper(*args, **kwargs):
+            result = func(*args, **kwargs)
+            start_time = time.time()
+            end_time = time.time()
+            elapsed_time = end_time - start_time
+            message = f"{func_name} took {elapsed_time*1000:.4f}ms"
+            lgr.log(level, message)  # Use the specified log level
+            return result
+        wrapper.__name__ = func_name
+        wrapper.__doc__ = func.__doc__
+        return wrapper
+    return decorator

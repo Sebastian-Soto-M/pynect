@@ -1,11 +1,12 @@
-import logging
 from collections.abc import Iterable
+from functools import partial
 from itertools import chain
-from sys import stdout
 from typing import Type
 from unittest import TestCase, TestLoader, TestSuite, TextTestRunner
 
-import pynect.logging.constants as pc
+from pynect.utils.utils import configure_logger as conf_logger
+
+configure_logger = partial(conf_logger, project_name='pynect')
 
 
 def _build_suite(
@@ -20,7 +21,3 @@ def _build_suite(
 def run(*test_classes) -> TestSuite:
     loader = TestLoader()
     TextTestRunner().run(_build_suite(loader, *test_classes))
-
-
-logging.basicConfig(level=logging.INFO, stream=stdout,
-                    format=pc.FILE_LOG_FORMAT, encoding='utf-8')
